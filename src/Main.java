@@ -3,9 +3,7 @@ import model.*;
 import service.*;
 import dao.*;
 
-import ui.PassagerUI;
-import ui.RechercheVolUI;
-import ui.ReservationUI;
+import ui.MainUI; // Ajout de l'interface principale
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -39,11 +37,11 @@ public class Main {
             VolController volController = new VolController(volService);
             ReservationController reservationController = new ReservationController(reservationService);
 
-            // Ajouter une nouvelle agence
+            // Ajouter une nouvelle agence (exemple de logique métier)
             Agence nouvelleAgence = new Agence(0, "Agence Air France", "contact@airfrance.com", "Promo d'été");
             agenceController.creerNouvelleAgence(nouvelleAgence);
 
-            // Ajouter un nouveau passager
+            // Ajouter un nouveau passager (exemple de logique métier)
             Passager nouveauPassager = new Passager(0, "Jean Dupont", "jean.dupont@example.com", "P1234567");
             passagerController.creerNouveauPassager(nouveauPassager);
 
@@ -63,23 +61,10 @@ public class Main {
             System.out.println("Liste des réservations : ");
             reservationController.afficherToutesLesReservations();
 
-            // **Appel des interfaces graphiques**
-            // Interface de gestion des passagers
+            // **Appel de l'interface graphique principale**
             SwingUtilities.invokeLater(() -> {
-                PassagerUI passagerUI = new PassagerUI();
-                passagerUI.setVisible(true);
-            });
-
-            // Interface de recherche de vols
-            SwingUtilities.invokeLater(() -> {
-                RechercheVolUI rechercheVolUI = new RechercheVolUI();
-                rechercheVolUI.setVisible(true);
-            });
-
-            // Interface de gestion des réservations
-            SwingUtilities.invokeLater(() -> {
-                ReservationUI reservationUI = new ReservationUI();
-                reservationUI.setVisible(true);
+                MainUI mainUI = new MainUI();
+                mainUI.setVisible(true);
             });
 
         } catch (SQLException e) {
