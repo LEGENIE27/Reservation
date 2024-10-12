@@ -15,11 +15,17 @@ public class DatabaseConnection {
     
     public static Connection getConnection() {
         if (connection == null) {
+            System.out.println("Tentative de connexion à la base de données...");
             try (InputStream input = DatabaseConnection.class.getClassLoader().getResourceAsStream("config.properties")) {
                 
                 if (input == null) {
+                    System.out.println("Le fichier config.properties est manquant !");
                     throw new IOException("Fichier de configuration non trouvé.");
+                } else {
+                    System.out.println("Le fichier config.properties est trouvé.");
                 }
+                
+                System.out.println("Lecture des propriétés du fichier config.properties...");
                 
                 // Charger les configurations à partir d'un fichier config.properties
                 Properties props = new Properties();
@@ -30,19 +36,25 @@ public class DatabaseConnection {
                 String password = props.getProperty("db.password");
 
                 // Charger le driver JDBC
+                System.out.println("Chargement du driver JDBC...");
                 Class.forName("com.mysql.cj.jdbc.Driver");
                 
                 // Etablir la connexion
+                System.out.println("Tentative d'établissement de la connexion avec la base de données...");
                 connection = DriverManager.getConnection(url, user, password);
+
+                // Afficher un message de confirmation si la connexion réussit
+                System.out.println("Connexion à la base de données réussie.");
+                
+                // Vérification de l'auto-commit
+                boolean autoCommit = connection.getAutoCommit();
+                System.out.println("Auto-commit activé : " + autoCommit);
                 
             } catch (ClassNotFoundException e) {
-                // Utilisez un système de logging ici
                 System.err.println("Driver JDBC non trouvé : " + e.getMessage());
             } catch (SQLException e) {
-                // Utilisez un système de logging ici
                 System.err.println("Erreur lors de la connexion à la base de données : " + e.getMessage());
             } catch (IOException e) {
-                // Utilisez un système de logging ici
                 System.err.println("Erreur de lecture du fichier de configuration : " + e.getMessage());
             }
         }
@@ -55,22 +67,39 @@ public class DatabaseConnection {
             try {
                 connection.close();
                 connection = null;
+                System.out.println("Connexion fermée.");
             } catch (SQLException e) {
-                // Utilisez un système de logging ici
                 System.err.println("Erreur lors de la fermeture de la connexion : " + e.getMessage());
             }
         }
     }
     
     public static boolean testConnection() {
-        try (Connection conn = getConnection();
-             PreparedStatement stmt = conn.prepareStatement("SELECT 1");
-             ResultSet rs = stmt.executeQuery()) {
-            return rs.next(); // Si la requête réussit et retourne une ligne, la connexion est bonne.
+        try (Connection conn = getConnection()) {
+            if (conn == null) {
+                System.err.println("La connexion est nulle. Impossible de tester la connexion.");
+                return false;
+            }
+            
+            try (PreparedStatement stmt = conn.prepareStatement("SELECT 1");
+                 ResultSet rs = stmt.executeQuery()) {
+                return rs.next(); // Si la requête réussit et retourne une ligne, la connexion est bonne.
+            }
         } catch (SQLException e) {
-            // Utilisez un système de logging ici
             System.err.println("Erreur lors du test de la connexion : " + e.getMessage());
             return false; // La connexion a échoué
         }
+    }
+
+    public static void main(String[] args) {
+        // Tester la connexion à la base de données
+        if (testConnection()) {
+            System.out.println("La connexion à la base de données est active.");
+        } else {
+            System.out.println("La connexion à la base de données a échoué.");
+        }
+        
+        // Fermer la connexion après le test
+        closeConnection();
     }
 }

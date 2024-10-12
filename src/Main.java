@@ -18,6 +18,9 @@ public class Main {
         try {
             connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/billets", "root", "Admin");
 
+            // Assure que l'auto-commit est activé pour valider automatiquement chaque opération
+            connection.setAutoCommit(true);
+
             // DAO et Services
             AgenceDAO agenceDAO = new AgenceDAO(connection);
             AgenceService agenceService = new AgenceService(agenceDAO);
@@ -42,7 +45,7 @@ public class Main {
             agenceController.creerNouvelleAgence(nouvelleAgence);
 
             // Ajouter un nouveau passager (exemple de logique métier)
-            Passager nouveauPassager = new Passager(0, "Jean Dupont", "jean.dupont@example.com", "P1234567");
+            Passager nouveauPassager = new Passager(25, "LEGENIE", "test@mail.com", "P1234567");
             passagerController.creerNouveauPassager(nouveauPassager);
 
             // Afficher toutes les agences

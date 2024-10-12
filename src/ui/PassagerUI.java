@@ -3,6 +3,8 @@ package ui;
 import javax.swing.*;
 import java.awt.*;
 import model.Passager;  // Utilise le modèle de passager
+import dao.PassagerDAO; // Assurez-vous d'importer PassagerDAO
+import util.DatabaseConnection; // Assurez-vous d'importer DatabaseConnection
 
 public class PassagerUI extends JFrame {
     private final JButton creerPassagerButton;
@@ -44,6 +46,10 @@ public class PassagerUI extends JFrame {
 
             // Créer et manipuler un objet Passager
             Passager nouveauPassager = new Passager(0, nom, email, passeport);
+            PassagerDAO passagerDAO = new PassagerDAO(DatabaseConnection.getConnection()); // Utilisez la connexion
+
+            // Appeler la méthode ajouterPassager pour ajouter le passager à la base de données
+            passagerDAO.ajouterPassager(nouveauPassager);
             System.out.println("Nouveau passager créé: " + nouveauPassager);
         });
     }
