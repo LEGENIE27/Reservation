@@ -1,13 +1,13 @@
 package model;
 
 import java.sql.Time;
-import java.util.Date;
+import java.sql.Date; // Remplace java.util.Date par java.sql.Date
 
 public class Vol {
     private int id;
     private String numeroVol;
     private String destination;
-    private Date dateDepart;
+    private Date dateDepart;  // Utilisation de java.sql.Date
     private Time heureDepart;
     private Time heureArrivee;
     private int agenceId; // Référence à l'agence

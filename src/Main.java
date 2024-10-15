@@ -3,7 +3,7 @@ import model.*;
 import service.*;
 import dao.*;
 
-import ui.MainUI; // Ajout de l'interface principale
+import ui.LoginUI; // Ajout de l'interface de connexion
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -41,7 +41,7 @@ public class Main {
             ReservationController reservationController = new ReservationController(reservationService);
 
             // Ajouter une nouvelle agence (exemple de logique métier)
-            Agence nouvelleAgence = new Agence(0, "Agence Air France", "contact@airfrance.com", "Promo d'été");
+            Agence nouvelleAgence = new Agence(0, "Air Burkina", "contact@airburkina.com", "Promo rentrée");
             agenceController.creerNouvelleAgence(nouvelleAgence);
 
             // Ajouter un nouveau passager (exemple de logique métier)
@@ -64,10 +64,10 @@ public class Main {
             System.out.println("Liste des réservations : ");
             reservationController.afficherToutesLesReservations();
 
-            // **Appel de l'interface graphique principale**
+            // **Appel de l'interface graphique principale via l'interface de connexion**
             SwingUtilities.invokeLater(() -> {
-                MainUI mainUI = new MainUI();
-                mainUI.setVisible(true);
+                LoginUI loginUI = new LoginUI();  // Créer et afficher la fenêtre de connexion
+                loginUI.setVisible(true);  // Afficher l'interface de connexion
             });
 
         } catch (SQLException e) {
